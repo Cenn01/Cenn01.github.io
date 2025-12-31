@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Year Together 💕</title>
+    <style>
+        /* ===== COLORS - Change these to customize your pastel theme ===== */
+        :root {
+            --pastel-pink: #FFD1DC;
+            --pastel-blue: #AEC6CF;
+            --pastel-purple: #E0BBE4;
+            --pastel-peach: #FFDAB9;
+            --pastel-mint: #B5EAD7;
+            --text-dark: #5A5A5A;
+        }
+
+        /* ===== BASIC SETUP ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, rgba(255, 209, 220, 0.7), rgba(174, 198, 207, 0.7)), url('https://plus.unsplash.com/premium_vector-1733711855701-e6970391b542?q=80&w=758&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* ===== ENTRY SCREEN (The date verification screen) ===== */
+        .entry-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .entry-box {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: fadeInDown 1s ease;
+        }
+
+        .entry-box h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .entry-box .subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .date-input-group {
+            margin-bottom: 25px;
+        }
+
+        .date-input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .date-input-group input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            border: 2px solid rgba(174, 198, 207, 0.5);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--text-dark);
+            font-family: 'Georgia', serif;
+            transition: all 0.3s ease;
+        }
+
+        .date-input-group input:focus {
+            outline: none;
+            border-color: var(--pastel-purple);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            background: var(--pastel-purple);
+            color: var(--text-dark);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: var(--pastel-pink);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .error-message {
+            color: #D8000C;
+            background: #FFD2D2;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .hint {
+            text-align: center;
+            font-size: 0.9em;
+            margin-top: 20px;
+            opacity: 0.7;
+        }
+
+        /* ===== MAIN CONTENT (Hidden until correct dates are entered) ===== */
+        .main-content {
+            display: none;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('https://plus.unsplash.com/premium_vector-1734153705665-c13489453ac1?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+        }
+
+        .main-content.visible {
+            display: block;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            animation: fadeInDown 1s ease;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        /* ===== STORY CARDS (Each moment in your relationship) ===== */
+        .story-card {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Different colors for each card */
+        .story-card:nth-child(2) { background: rgba(255, 209, 220, 0.6) !important; }
+        .story-card:nth-child(3) { background: rgba(174, 198, 207, 0.6) !important; }
+        .story-card:nth-child(4) { background: rgba(224, 187, 228, 0.6) !important; }
+        .story-card:nth-child(5) { background: rgba(255, 218, 185, 0.6) !important; }
+        .story-card:nth-child(6) { background: rgba(181, 234, 215, 0.6) !important; }
+        .story-card:nth-child(7) { background: rgba(255, 209, 220, 0.6) !important; }
+        .story-card:nth-child(8) { background: rgba(174, 198, 207, 0.6) !important; }
+        .story-card:nth-child(9) { background: rgba(224, 187, 228, 0.6) !important; }
+        .story-card:nth-child(10) { background: rgba(255, 218, 185, 0.6) !important; }      
+
+
+        /* This makes cards appear one by one */
+        .story-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: slideUp 0.6s ease;
+        }
+
+        .story-card:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Month label */
+        .month {
+            display: inline-block;
+            background: var(--pastel-purple);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Story title */
+        .story-title {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        /* Story description - hidden at first, reveals on click */
+        .story-description {
+            font-size: 1.1em;
+            line-height: 1.8;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s ease;
+            opacity: 0;
+        }
+
+        .story-card.active .story-description {
+            max-height: 2000px;
+            opacity: 1;
+            margin-top: 20px;
+        }
+
+        /* Click hint */
+        .click-hint {
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-dark);
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+
+        .story-card.active .click-hint {
+            display: none;
+        }
+
+        /* ===== FINAL MESSAGE ===== */
+        .final-message {
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 1s ease 0.5s forwards;
+        }
+
+        .final-message h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .final-message p {
+            font-size: 1.3em;
+            line-height: 1.8;
+        }
+
+        /* Heart animation */
+        .heart {
+            display: inline-block;
+            color: #FF69B4;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(1); }
+        }
+
+        /* ===== RESPONSIVE DESIGN (for mobile) ===== */
+        @media (max-width: 600px) {
+            .entry-box {
+                padding: 40px 25px;
+            }
+            .entry-box h1 {
+                font-size: 2em;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+            .story-title {
+                font-size: 1.5em;
+            }
+        }
+
+        /* ===== SURPRISE BUTTON ===== */
+.surprise-btn {
+    background: var(--pastel-purple);
+    color: var(--text-dark);
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.3em;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.surprise-btn:hover {
+    background: var(--pastel-pink);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== FIREWORKS OVERLAY ===== */
+.fireworks-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.fireworks-overlay.active {
+    display: flex;
+}
+
+/* Firework particles */
+.firework {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Love Envelope Animation */
+.love-envelope {
+    position: relative;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0);
+    animation: envelopeOpen 2s ease 2s forwards;
+}
+
+@keyframes envelopeOpen {
+    0% {
+        transform: scale(0) rotateY(90deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1) rotateY(0deg);
+    }
+    100% {
+        transform: scale(1) rotateY(0deg);
+        opacity: 1;
+    }
+}
+
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-purple));
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    z-index: 2;
+    transform-origin: top;
+    animation: flapOpen 1.5s ease 3s forwards;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes flapOpen {
+    0% {
+        transform: rotateX(0deg);
+    }
+    100% {
+        transform: rotateX(-180deg);
+    }
+}
+
+/* Love Letter Container */
+.love-letter {
+    position: relative;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Real Heart Button */
+.heart-btn {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    animation: heartPulse 1.5s infinite;
+    filter: drop-shadow(0 8px 20px rgba(255, 20, 147, 0.5));
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin: 0 auto;
+    background: none;
+    border: none;
+    font-size: 3em;
+    padding: 0;
+    line-height: 1;
+}
+
+.heart-btn:hover {
+    transform: scale(1.2);
+    filter: drop-shadow(0 12px 30px rgba(255, 20, 147, 0.8));
+}
+
+/* New Year Message (hidden until heart is clicked) */
+.newyear-message {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-purple));
+    border-radius: 15px;
+    animation: fadeInUp 0.8s ease;
+    width: 100%;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.newyear-message.visible {
+    display: block;
+    opacity: 1;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.newyear-message h3 {
+    font-size: 2em;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.newyear-message p {
+    font-size: 1.3em;
+    line-height: 1.8;
+}
+
+/* ===== CLOSE WISH BUTTON ===== */
+.close-wish-btn {
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.3);
+    color: var(--text-dark);
+    border: 2px solid var(--text-dark);
+    padding: 12px 30px;
+    font-size: 1.1em;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.close-wish-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* ===== CLOSE BUTTON (X Button) ===== */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    color: var(--text-dark);
+    font-size: 2em;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.close-btn:hover {
+    background: rgba(255, 105, 180, 0.5);
+    transform: scale(1.1);
+    color: white;
+    z-index: 1001;
+}
+
+/* ===== FLOATING HEARTS ===== */
+.floating-hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.heart-float {
+    position: absolute;
+    font-size: 2em;
+    opacity: 0.6;
+    animation: float-up 8s infinite ease-in;
+}
+
+@keyframes float-up {
+    0% {
+        opacity: 0.6;
+        transform: translateY(100vh) rotate(0deg);
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100vh) rotate(360deg);
+    }
+}
+
+/* ===== ENVELOPE DESIGN ===== */
+.envelope-container {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    margin: 50px auto;
+    cursor: pointer;
+    perspective: 1000px;
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+}
+
+.envelope.open {
+    transform: rotateX(-15deg);
+}
+
+.envelope-body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #FFE4E1, #FFF0F5);
+    border: 2px solid rgba(255, 105, 180, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.envelope-flap {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(135deg, #FFD1DC, #FFC0CB);
+    border: 2px solid rgba(255, 105, 180, 0.3);
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    transform-origin: top;
+    transition: transform 0.8s ease;
+    z-index: 10;
+}
+
+.envelope.open .envelope-flap {
+    transform: rotateX(160deg);
+}
+
+.envelope-flap::before,
+.envelope-flap::after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    background: linear-gradient(135deg, transparent 50%, #FFD1DC 50%);
+}
+
+.envelope-flap::before {
+    left: 0;
+    top: 0;
+}
+
+.envelope-flap::after {
+    right: 0;
+    top: 0;
+    background: linear-gradient(225deg, transparent 50%, #FFD1DC 50%);
+}
+
+.envelope-letter {
+    position: absolute;
+    width: 90%;
+    height: 85%;
+    background: rgba(255, 255, 255, 0.95);
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 5;
+}
+
+.envelope-text {
+    padding: 15px;
+    font-size: 0.9em;
+    text-align: center;
+    color: var(--text-dark);
+    height: 100%;
+    overflow-y: auto;
+}
+
+.envelope-sticker {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2em;
+    animation: sticker-bounce 2s infinite ease;
+    z-index: 11;
+}
+
+@keyframes sticker-bounce {
+    0%, 100% { transform: rotate(-5deg) scale(1); }
+    50% { transform: rotate(5deg) scale(1.1); }
+}
+
+/* ===== REAL HEART SHAPE ===== */
+.heart-shape {
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+.heart-shape::before,
+.heart-shape::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 52px;
+    height: 80px;
+    background: linear-gradient(135deg, #FF69B4, #FF1493);
+    border-radius: 52px 52px 0 0;
+    animation: heartBeat 1.2s infinite;
+}
+
+.heart-shape::before {
+    left: 52px;
+}
+
+.heart-shape::after {
+    left: 0;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1); }
+}
+
+/* ===== GREETING CARD FOLD ===== */
+.greeting-card {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    perspective: 1500px;
+}
+
+.card-cover {
+    background: linear-gradient(135deg, #E0BBE4, #D4A5D9);
+    border-radius: 15px;
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform-style: preserve-3d;
+}
+
+.card-cover.opened {
+    transform: rotateY(180deg);
+    pointer-events: none;
+}
+
+.card-inside {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #FFE4E1, #FFF0F5);
+    border-radius: 15px;
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+}
+
+/* ===== CONFETTI ===== */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    z-index: 999;
+    pointer-events: none;
+}
+
+.confetti-piece {
+    animation: confetti-fall 3s linear forwards;
+}
+
+@keyframes confetti-fall {
+    0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg);
+    }
+}
+
+/* ===== MUSIC CONTROL ===== */
+.music-control {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 105, 180, 0.3);
+    border: 2px solid #FF69B4;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.music-control:hover {
+    background: rgba(255, 105, 180, 0.5);
+    transform: scale(1.1);
+}
+
+.music-control.playing {
+    background: rgba(255, 105, 180, 0.6);
+}
+
+/* ===== SOUND EFFECT ANIMATIONS ===== */
+.sound-wave {
+    position: absolute;
+    border: 2px solid #FF69B4;
+    border-radius: 50%;
+    animation: sound-pulse 0.6s ease-out;
+}
+
+@keyframes sound-pulse {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    100% {
+        width: 60px;
+        height: 60px;
+        opacity: 0;
+    }
+}
+
+/* ===== ROMANTIC ANIMATIONS ===== */
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(255, 105, 180, 0.8);
+    }
+}
+
+.glow {
+    animation: pulse-glow 2s infinite;
+}
+    </style>
+</head>
+<body>
+    <!-- ===== FLOATING HEARTS BACKGROUND ===== -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <!-- ===== MUSIC CONTROL BUTTON ===== -->
+    <div class="music-control" id="musicControl" title="Toggle Background Music">
+        🎵
+    </div>
+    
+    <!-- ===== AUDIO ELEMENTS ===== -->
+    <audio id="bgMusic" loop>
+        <source src="HER - Best Part Lyrics Ft Daniel Caesar.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="envelopeSound"></audio>
+    <audio id="heartSound"></audio>
+    <audio id="clickSound"></audio>
+
+    <!-- ===== ENTRY SCREEN - She must enter the correct dates first ===== -->
+    <div class="entry-screen" id="entryScreen">
+        <div class="entry-box" style="position: relative;">
+    <!-- Envelope flap decoration -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 80px; background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-purple)); clip-path: polygon(0 0, 100% 0, 50% 100%); border-radius: 10px 10px 0 0; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></div>
+            <h1>Baby Nak Test Ingatan Yayang Duluuuuu 💕</h1>
+            <p class="subtitle">Sayang kena jawab ssolan ni dulu to unlock our love story</p>
+            
+            <div class="date-input-group">
+                <label>Hari Pertama Kita Bermula Sembang? 💬</label>
+                <input type="date" id="firstChatDate" placeholder="DD/MM/YYYY">
+            </div>
+            
+            <div class="date-input-group">
+                <label>The Day We Decide To Get Serious In This Relationship? ❤️</label>
+                <input type="date" id="loveDate" placeholder="DD/MM/YYYY">
+            </div>
+            
+            <button class="submit-btn" onclick="checkDates()">Tekan Sini Untuk Kejutan ✨</button>
+            
+            <div class="error-message" id="errorMessage">
+                Hmm, salah ni sayang. Try again! 💭
+            </div>
+            
+            <p class="hint">💡 Hint: Ingat balik waktu kita memula kenal duluuuu</p>
+            <!-- Envelope seal decoration -->
+            <div style="position: absolute; bottom: -30px; right: 20px; font-size: 3em; animation: sticker-bounce 2s infinite ease;">💕</div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT - Only shows after correct dates ===== -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <!-- HEADER SECTION - Edit the title and subtitle here -->
+            <div class="header">
+                <h1>2 Tahun Kita Bersama <span class="heart">💕</span></h1>
+                <p>A journey through 2025</p>
+            </div>
+
+            <!-- STORY CARDS - Copy this entire div to add more moments -->
+            <!-- Card 1 -->
+            <div class="story-card">
+                <span class="month">January 🌸</span>
+                <h2 class="story-title">The Year Started With Baby Goes To Kelantan</h2>
+                <p class="click-hint">✨ Click to reveal ✨</p>
+                <div class="story-description">
+                    January was the month in which we met at Kelantan. At that time, you were not in a good place mentally, burdened by problems with your friends and overwhelmed by everything you were facing. Knowing that you were struggling, baby came to see you, not just to meet you, but to be there for you, to comfort you and to remind you that you were not alone.
+                    <br><br>
+                    Even though you were dealing with an exhausting workload and deep emotional pressure, baby still made the effort to come and together we spent time exploring many places. We walked, talked, laughed and shared moments that allowed you, even if just for a while, to breathe and feel lighter again. Those days were not just about going out. They were about healing, connection and finding warmth in each other’s presence.
+                    <br><br>
+                    What made it even more meaningful was that, despite all the chaos and heaviness in your life, we created something gentle and beautiful together. January became more than just the start of a new year, it became the beginning of a story filled with care, support and memories that will always stay with us. 💛
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="story-card">
+                <span class="month">February 🍜</span>
+                <h2 class="story-title">Our First Time Makan Steambot 😅</h2>
+                <p class="click-hint">✨ Click to reveal ✨</p>
+                <div class="story-description">
+                    February was the month when we shared our very first steamboat together. So many things happened that day, including the moment when you felt upset with baby because baby was a little confused while we were at the steamboat place. Even so, being there with you made everything feel special.
+                    <br><br>
+                    The food tasted so much better simply because we were eating it together. And although we had a small disagreement, seeing you smile and enjoy every bite brought baby a deep sense of relief. Watching you happy, especially while satisfying all your cravings, made baby feel peaceful and fulfilled as though nothing else in the world mattered more than that moment with you. 💕
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="story-card">
+                <span class="month">April 🌙</span>
+                <h2 class="story-title">HARI RAYAAAAAA</h2>
+                <p class="click-hint">✨ Click to reveal ✨</p>
+                <div class="story-description">
+                    April was the month of Hari Raya Aidilfitri, a time that became incredibly meaningful for us. Baby travelled all the way to your home to meet your family for the first time and also to meet Tok. That alone made everything feel special and precious. 
+                    <br><br>
+                    We went out together to buy Hari Raya food, chose the cake that Mak loves with Kak Ida, and even helped to collect Ayah’s medicine that morning. All those small moments made baby feel like a part of your family and not just a visitor, but someone who truly belonged. 
+                    <br><br>
+                    Later, when we went to Tok’s house, we took photos together with Tok, capturing memories that were full of joy, laughter, and love. The atmosphere was lively and beautiful, and everything felt so warm and real. These memories are irreplaceable moments that baby will always carry in the heart. 🤍
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="story-card">
+                <span class="month">May 💐</span>
+                <h2 class="story-title">Midsem Date</h2>
+                <p class="click-hint">✨ Click to reveal ✨</p>
+                <div class="story-description">
+                    May was the month when baby gave you that large bouquet of flowers. It was a pre-order made from limited, rare blooms and yes, it was quite expensive but the price never mattered. What truly mattered was the moment I saw your face light up when you received it. That happiness was worth everything, and it brought baby a sense of relief and fulfilment that cannot be measured in money.
+                    <br><br>
+                    Making you feel cherished, special, and deeply loved is baby’s greatest goal. You are the only princess in my life and seeing you shine so brightly that the whole world notices even making others a little envious is simply a reflection of how precious you are to me. 💐✨
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="story-card">
+                <span class="month">August 🎪</span>
+                <h2 class="story-title">Food Festival</h2>
+                <p class="click-hint">✨ Click to reveal ✨</p>
+                <div class="story-description">
+                    August was the month of the semester break and we went out on a special date to a food festival. We bought tiramisu, lempeng and a few other things that looked delicious, though the taste turned out to be just average. The prices were quite high but that is normal for a food festival. 
+                    <br><br>
+                    Even so, what truly mattered was that we were together, laughing, sharing food and enjoying each other’s company. Those moments were priceless. They cannot be bought or replaced, they can only be remembered, treasured and kept forever in our hearts. 🤍
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="story-card">
+                <span class="month">September 🎂</span>
+                <h2 class="story-title">My Birthdayy</h2>
+                <p class="click-hint">✨ Click to reveal ✨</p>
+                <div class="story-description">
+                    September was the month of my birthday and it became one of the most unforgettable months because of you. We went out on a special date and ate Nasi Ayam Gepuk Pak Gembus, my absolute favourite and it was unbelievably delicious. On top of that, you bought me a cake that was so good and we also shared bingsu that tasted amazing. Every little thing felt extra special because it was done with you.
+                    <br><br>
+                    You also gave me the JTT × Kekanda collaboration shirt and honestly, it is so beautiful I really love it. And then there was the new pair of Makerz OL shoes. That was truly the most expensive gift, but more importantly, it is the gift that baby loves the most because it is incredibly nice and meaningful to me.
+                    <br><br>
+                    Thank you, sayang, for everything you did for me. Every effort, every surprise and every moment you gave me made my birthday so much more special. I will always be grateful to have you by my side. 🤍
+                </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="story-card">
+                <span class="month">October 🎁</span>
+                <h2 class="story-title">Yourss Birthdayy</h2>
+                <p class="click-hint">✨ Click to reveal ✨</p>
+                <div class="story-description">
+                    October was your birthday and baby was incredibly excited for it. Baby travelled all the way from Penang to Kelantan just to celebrate with you. This was not a last-minute plan, baby had been planning it for months, waiting eagerly for the moment it would finally happen.
+                    <br><br>
+                    Baby bought you a piece of Habib jewellery and although it was the more affordable one, baby truly hopes you understand that it was given with all my heart. Baby may not yet be able to buy the more expensive jewellery like other boyfriends do, but when baby is blessed with more one day, I promise I will give you even more. Baby also bought you the Christy Ng bag because the SVGXBRIK bag was always sold out and never restocked, no matter how long baby waited for it. That honestly made baby feel a little sad.
+                    <br><br>
+                    Even so, baby hopes you can see the love and effort behind everything I gave you, no matter how small it may seem. Baby really hopes you love the gifts, because every single thing was chosen after months of planning and dreaming about your smile. 😔
+                    <br><br>
+                    More than the presents, baby also hopes you loved the way I celebrated your birthday throughout the whole trip, the time we spent together, the journey, and the memories we created. Those moments, to baby, are just as precious as anything money could buy. 💖
+                </div>
+            </div>
+
+            <!-- Card 8 -->
+            <div class="story-card">
+                <span class="month">November 🎮</span>
+                <h2 class="story-title">Midsem Datessssssss!!!!💕</h2>
+                <p class="click-hint">✨ Click to reveal ✨</p>
+                <div class="story-description">
+                    November came with our mid-semester dates, and honestly, those were some of my favourite moments with you. We went out together and played so many games and I loved every second of it. Do you remember that game card shop we went to? It was honestly so fun. Yes, it was a little pricey, but for baby, it was totally worth it because we were laughing, competing and just enjoying ourselves together.
+                    <br><br>
+                    The games we played were really exciting except the one chosen by the Indian lady, which was honestly a bit boring 😅. Baby preferred the ones chosen by the Chinese guy because they were much more interesting and fun to play. Still, what mattered most was that we were there together, sharing those moments.
+                    <br><br>
+                    Later that night, we went to Burg N Go. The burgers were good, but baby thinks we can definitely find an even better place next time. I already have somewhere in mind, and when the time comes, baby will take you there, okay? 🍔💛
+                </div>
+            </div>
+
+            <!-- Card 9 - The Special Last Card -->
+            <div class="story-card">
+                <span class="month">December 🎆</span>
+                <h2 class="story-title">One More Thing... 💌</h2>
+                <p class="click-hint">✨ Click to reveal ✨</p>
+                <div class="story-description">
+                    December marks the closing of our story for this year, a chapter we have walked through together with all its challenges, disagreements and moments of happiness. Through everything, you have remained the one I choose above anyone else.
+                    <br><br>
+                    You came into my life at exactly the right time and I truly believe Allah brought us together for a reason. Our meeting was never an accident but it was written with purpose. 
+                    <br><br>
+                    So please wait for me, sayang. Wait for baby to become successful, to be blessed with abundance and stability. And when that time comes, we will get married and build a life together, a life filled with love, peace and faith, all the way until Jannah. 🤍
+        
+                    <br><br>
+        
+                    Are you ready for your New Year surprise? 🎆
+        
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="surprise-btn" onclick="startFireworks()">
+                         Tekan Sini Untuk Lebih Kejutan Mendatang! 🎁
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+    <!-- JAVASCRIPT - Makes everything interactive -->
+    <script>
+    // ===== SET YOUR CORRECT DATES HERE =====
+    const CORRECT_FIRST_CHAT = "2023-08-09";
+    const CORRECT_LOVE_DATE = "2023-10-18";
+
+    // ===== CHECK IF DATES ARE CORRECT =====
+    function checkDates() {
+        const firstChat = document.getElementById('firstChatDate').value;
+        const loveDate = document.getElementById('loveDate').value;
+        const errorMsg = document.getElementById('errorMessage');
+        
+        if (firstChat === CORRECT_FIRST_CHAT && loveDate === CORRECT_LOVE_DATE) {
+            document.getElementById('entryScreen').style.display = 'none';
+            document.getElementById('mainContent').classList.add('visible');
+            
+            // Reinitialize cards after content is visible
+            setTimeout(() => {
+                initializeCards();
+            }, 100);
+        } else {
+            errorMsg.style.display = 'block';
+            document.querySelector('.entry-box').style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                document.querySelector('.entry-box').style.animation = '';
+            }, 500);
+        }
+    }
+
+    // Shake animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // ===== MAKE CARDS APPEAR AS YOU SCROLL =====
+    function initializeCards() {
+        console.log("Initializing cards...");
+        const cards = document.querySelectorAll('.story-card');
+        console.log("Found " + cards.length + " cards");
+        
+        // Remove any existing listeners to avoid duplicates
+        cards.forEach(card => {
+            const newCard = card.cloneNode(true);
+            card.parentNode.replaceChild(newCard, card);
+        });
+        
+        // Get fresh reference to cards after cloning
+        const freshCards = document.querySelectorAll('.story-card');
+        
+        function checkScroll() {
+            freshCards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (cardTop < windowHeight - 100) {
+                    card.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        
+        // Trigger scroll check immediately
+        checkScroll();
+
+        // ===== MAKE CARDS CLICKABLE =====
+        freshCards.forEach((card, index) => {
+            console.log("Attaching click listener to card " + index);
+            card.addEventListener('click', function(e) {
+                console.log("Card " + index + " clicked!");
+                e.stopPropagation();
+                this.classList.toggle('active');
+                console.log("Active class toggled. Is active now?", this.classList.contains('active'));
+            });
+            
+            // Also make it work on any part of the card
+            card.style.cursor = 'pointer';
+        });
+    }
+
+    // Initialize cards when page is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeCards);
+    } else {
+        initializeCards();
+    }
+
+    // ===== FIREWORKS AND LOVE LETTER =====
+    function startFireworks() {
+    console.log("Starting fireworks!");
+    
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'fireworks-overlay active';
+    overlay.id = 'fireworksOverlay';
+    document.body.appendChild(overlay);
+    
+    // Create love letter
+    const letter = document.createElement('div');
+    letter.className = 'love-letter';
+    
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close-btn';
+    closeBtn.textContent = '✕';
+    closeBtn.onclick = closeFireworks;
+    letter.appendChild(closeBtn);
+    
+    // Title
+    const title = document.createElement('h2');
+    title.textContent = 'To My Love 💕';
+    letter.appendChild(title);
+    
+    // Intro paragraph
+    const intro = document.createElement('p');
+    intro.textContent = 'This year with you has been the most beautiful journey. Even across the miles, you make every day brighter.';
+    letter.appendChild(intro);
+    
+    // Click hint
+    const hint = document.createElement('p');
+    hint.style.fontSize = '1em';
+    hint.style.opacity = '0.8';
+    hint.style.marginBottom = '30px';
+    hint.textContent = 'Click the heart to reveal your New Year message ❤️';
+    letter.appendChild(hint);
+    
+    // Heart button
+    const heartBtn = document.createElement('button');
+    heartBtn.className = 'heart-btn';
+    heartBtn.type = 'button';
+    heartBtn.textContent = '❤️';
+    heartBtn.id = 'heartBtn';
+    heartBtn.style.cursor = 'pointer';
+    letter.appendChild(heartBtn);
+    
+    // New Year Message Container
+    const msgContainer = document.createElement('div');
+    msgContainer.className = 'newyear-message';
+    msgContainer.id = 'newyearMsg';
+    
+    // Message content
+    msgContainer.innerHTML = `
+        <h3>Happy New Year 2026! 🎊</h3>
+        <p>
+            As this new year begins, baby looks back at everything we went through together, from the very first moment we in January, when you were not okay and baby came to hold your heart, until December, when we survived every challenge, every argument and every beautiful memory side by side. So many things have happened, but one thing never changed which you are still the one I choose, every single day. 💕
+            <br><br>
+            I don't want a new year with new people. I want a new year with the same you. We're growing stronger, loving deeper and building our future slowly together. I want to keep creating memories with you, whether it is eating simple food, going on dates, travelling far just to see your smile or just sitting quietly next to you. Even the smallest moments feel special when they are with you.
+            <br><br>
+            Sayang, you came into my life at the right time and I truly believe Allah brought us together with a purpose. I pray that this new year will be kinder to us, that it will give baby the strength to become better, wiser and more successful, so that one day I can stand proudly in front of you and take your hand as my wife.
+            <br><br>
+            So please wait for me, sayang. Wait for baby while I work hard, while I chase my dreams, while I try to become the man you deserve. I promise, everything I do is for our future and for the life we will build together until Jannah.
+            <br><br>
+            This year, next year, and all the years after that…
+            <br><br>
+            I choose you. Always. 🤍
+        </p>
+        <p style="margin-top: 20px; font-size: 1.5em;">
+            I love you more than words can say ❤️
+        </p>
+        <p style="margin-top: 20px; font-size: 1em; opacity: 0.7;">
+            - Your Baby
+        </p>
+    `;
+    
+    // Close button for message
+    const closeWishBtn = document.createElement('button');
+    closeWishBtn.className = 'close-wish-btn';
+    closeWishBtn.textContent = 'Close Message 💌';
+    closeWishBtn.onclick = closeWishMessage;
+    msgContainer.appendChild(closeWishBtn);
+    
+    // Append message to letter
+    letter.appendChild(msgContainer);
+    
+    // Append letter to overlay
+    overlay.appendChild(letter);
+    
+    // Add event listener to heart button
+    const heartBtnElement = document.getElementById('heartBtn');
+    if (heartBtnElement) {
+        console.log("Adding click listener to heart button");
+        heartBtnElement.addEventListener('click', function(e) {
+            console.log("Heart button clicked via addEventListener!");
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Reveal the message - use all methods to ensure it shows
+            const msgDiv = document.getElementById('newyearMsg');
+            if (msgDiv) {
+                console.log("Message div found! ID:", msgDiv.id);
+                console.log("Current innerHTML length:", msgDiv.innerHTML.length);
+                
+                // Use all methods to make it visible
+                msgDiv.classList.add('visible');
+                msgDiv.style.display = 'block';
+                msgDiv.style.visibility = 'visible';
+                msgDiv.style.opacity = '1';
+                msgDiv.style.zIndex = '1000';
+                
+                console.log("Message styles applied");
+                console.log("Message is now visible");
+            } else {
+                console.log("ERROR: Message div NOT found!");
+                // Try to find it anyway
+                const allDivs = document.querySelectorAll('div[id*="newyear"]');
+                console.log("Found divs with 'newyear' in id:", allDivs.length);
+                allDivs.forEach((div, i) => {
+                    console.log(i, ":", div.id, div.className);
+                });
+            }
+            
+            // Hide heart button
+            this.style.display = 'none';
+            
+            // Play sounds and confetti
+            playSound('heart');
+            createConfetti();
+        });
+    } else {
+        console.log("ERROR: Heart button element not found!");
+    }
+    
+    // Launch fireworks
+    launchFireworks(overlay);
+}
+
+    function launchFireworks(container) {
+        console.log("Launching fireworks!");
+        const colors = ['#FFD1DC', '#AEC6CF', '#E0BBE4', '#FFDAB9', '#B5EAD7', '#FF69B4', '#FFB6C1'];
+        
+        // Launch 5 fireworks with delay
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                createFirework(container, colors);
+            }, i * 400);
+        }
+    }
+
+    function createFirework(container, colors) {
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * (window.innerHeight * 0.5);
+        
+        // Create 30 particles per firework
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'firework';
+            
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const angle = (Math.PI * 2 * i) / 30;
+            const velocity = 50 + Math.random() * 100;
+            
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+            
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.background = color;
+            particle.style.setProperty('--tx', tx + 'px');
+            particle.style.setProperty('--ty', ty + 'px');
+            
+            container.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1000);
+        }
+    }
+
+    function revealMessage(event) {
+        console.log("=== revealMessage CALLED ===");
+        
+        const msg = document.getElementById('newyearMsg');
+        const heartBtn = document.getElementById('heartBtn');
+        
+        if (msg) {
+            console.log("Message found, adding visible class and display styles");
+            msg.classList.add('visible');
+            msg.style.display = 'block';
+            msg.style.opacity = '1';
+            msg.style.maxHeight = '2000px';
+        } else {
+            console.log("ERROR: Message not found!");
+        }
+        
+        if (heartBtn) {
+            console.log("Hiding heart button");
+            heartBtn.style.display = 'none';
+        }
+        
+        playSound('heart');
+        createConfetti();
+    }
+
+    function closeWishMessage() {
+        console.log("Closing wish message");
+        const wishMsg = document.getElementById('newyearMsg');
+        const heartBtn = document.getElementById('heartBtn');
+        
+        if (wishMsg) {
+            wishMsg.classList.remove('visible');
+        }
+        
+        if (heartBtn) {
+            heartBtn.style.display = 'block';
+        }
+    }
+
+    function closeFireworks() {
+        const overlay = document.getElementById('fireworksOverlay');
+        if (overlay) {
+            overlay.remove();
+        }
+    }
+
+    // ===== FLOATING HEARTS ANIMATION ===== 
+    function createFloatingHearts() {
+        const hearts = ['❤️', '💕', '💖', '💗', '💝'];
+        const container = document.getElementById('floatingHearts');
+        
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.className = 'heart-float';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (5 + Math.random() * 5) + 's';
+            
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }, 500);
+    }
+
+    // ===== CONFETTI EFFECT =====
+    function createConfetti() {
+        const colors = ['#FFD1DC', '#AEC6CF', '#E0BBE4', '#FFDAB9', '#B5EAD7', '#FF69B4'];
+        
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti confetti-piece';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.top = '-10px';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animation = `confetti-fall ${2 + Math.random() * 2}s linear forwards`;
+            
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 4000);
+        }
+    }
+
+    // ===== BACKGROUND MUSIC CONTROL =====
+    const bgMusic = document.getElementById('bgMusic');
+    const musicControl = document.getElementById('musicControl');
+    let isMusicPlaying = false;
+
+    musicControl.addEventListener('click', function() {
+        if (isMusicPlaying) {
+            bgMusic.pause();
+            musicControl.classList.remove('playing');
+            musicControl.textContent = '🔇';
+        } else {
+            bgMusic.play().catch(err => console.log('Audio play error:', err));
+            musicControl.classList.add('playing');
+            musicControl.textContent = '🎵';
+        }
+        isMusicPlaying = !isMusicPlaying;
+    });
+
+    // ===== SOUND EFFECT FUNCTION =====
+    function playSound(soundType) {
+        const sounds = {
+            envelope: 'https://assets.mixkit.co/active_storage/sfx/2893/2893-preview.mp3',
+            heart: 'https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3',
+            click: 'https://assets.mixkit.co/active_storage/sfx/2548/2548-preview.mp3'
+        };
+
+        if (sounds[soundType]) {
+            const audio = new Audio(sounds[soundType]);
+            audio.volume = 0.3;
+            audio.play().catch(err => console.log('Sound play error:', err));
+        }
+    }
+
+    // ===== UPDATE HEART BUTTON WITH SOUND =====
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('heart-btn')) {
+            playSound('heart');
+            createConfetti();
+        }
+        if (e.target.classList.contains('surprise-btn')) {
+            playSound('envelope');
+        }
+    });
+
+    // ===== START BACKGROUND MUSIC ON ENTRY =====
+    function startBackgroundMusic() {
+        // Don't auto-play due to browser restrictions, let user click music control
+        // bgMusic.play().catch(err => console.log('Auto-play prevented'));
+    }
+
+    // ===== INITIALIZE ON PAGE LOAD =====
+    document.addEventListener('DOMContentLoaded', function() {
+        createFloatingHearts();
+        startBackgroundMusic();
+    });
+
+    // Initialize for already-loaded page
+    if (document.readyState !== 'loading') {
+        createFloatingHearts();
+        startBackgroundMusic();
+    }
+
+        // ===== OPTIONAL: ADD SOUND EFFECT ON CLICK =====
+        // Uncomment the lines below and add a sound URL to enable
+        /*
+        const clickSound = new Audio('YOUR_SOUND_URL_HERE.mp3');
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                clickSound.play();
+            });
+        });
+        */
+    </script>
+    </div>
+</div>
+</body>
+</html>
