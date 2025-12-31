@@ -1429,11 +1429,21 @@
             musicControl.classList.remove('playing');
             musicControl.textContent = '🔇';
         } else {
-            bgMusic.play().catch(err => console.log('Audio play error:', err));
+            // Mobile browsers require user interaction to play audio
+            bgMusic.play().catch(err => {
+                console.log('Audio play error:', err);
+                alert('Please allow audio playback in your browser settings');
+            });
             musicControl.classList.add('playing');
             musicControl.textContent = '🎵';
         }
         isMusicPlaying = !isMusicPlaying;
+    });
+
+    // Prevent auto-play on mobile - user must click button
+    window.addEventListener('load', function() {
+        // Don't auto-play - let user click the music button
+        console.log('Music player ready. Click 🔇 button to play music.');
     });
 
     // ===== SOUND EFFECT FUNCTION =====
@@ -1495,4 +1505,5 @@
 </div>
 </body>
 </html>
+
 
